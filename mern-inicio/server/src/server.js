@@ -1,9 +1,25 @@
 import app from './app.js';
-
-const PORT = 5000;
-
-app.listen(PORT, () => {
-    console.log(
-        `Servidor ejecutandose en http://localhost:${PORT}`
-    );
-});
+import {
+    conectarDB
+} from './config/db.js';
+import{
+    env
+} from './config/env.js';
+async function iniciarServidor() {
+    try {
+        await conectarDB(env.mongodb_uri);
+        app.listen(env.port, () => {
+            console.log(`Servidor escuchando en el puerto ${env.port}`);
+        });
+    } catch (error) {
+        console.error("Error al iniciar el servidor:", error);
+        process.exit(1);
+    }
+}
+iniciarServidor();
+//const PORT = 5000;
+//app.listen(PORT, () => {
+//   console.log(
+//        `Servidor ejecutandose en http://localhost:${PORT}`
+//    );
+//});
