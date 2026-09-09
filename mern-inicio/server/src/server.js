@@ -1,25 +1,29 @@
-import app from './app.js';
-import {
-    conectarDB
-} from './config/db.js';
-import{
-    env
-} from './config/env.js';
+//Importamos la aplicación Express que configuramos
+//en el archivo app.js
+import app from "./app.js";
+
+//Importamos la función responsable de conectar con la base de datos de MongoDB
+import { conectarDB } from "./config/db.js";
+
+//Importamos nuestras variables de entorno para la configuración
+import { env } from "./config/env.js";
+
+//Creamos una función asíncrona
+//Primero conectamos la BD
+//y luego levantamos el servidor de express
 async function iniciarServidor() {
-    try {
-        await conectarDB(env.mongodb_uri);
-        app.listen(env.port, () => {
-            console.log(`Servidor escuchando en el puerto ${env.port}`);
-        });
-    } catch (error) {
-        console.error("Error al iniciar el servidor:", error);
-        process.exit(1);
-    }
+  try {
+    //Intentamos establecer la conexión
+    await conectarDB(env.mongodb_uri);
+    //Si se establece la conexión
+    //entonces abrimos el servidor HTTP
+    app.listen(env.port, () => {
+      console.log(`Servidor escuchando en el puerto ${env.port}`);
+    });
+  } catch (error) {
+    console.error("Error al iniciar el servidor:", error);
+    process.exit(1); // Salir del proceso con un código de error
+  }
 }
+
 iniciarServidor();
-//const PORT = 5000;
-//app.listen(PORT, () => {
-//   console.log(
-//        `Servidor ejecutandose en http://localhost:${PORT}`
-//    );
-//});
