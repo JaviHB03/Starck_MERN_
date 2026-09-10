@@ -25,7 +25,7 @@ app.use(express.json());
 app.get("/salud", (req, res) => {
   res.json({
     estado: "ok",
-    mensaje: "Servidor corriendo correctamente",
+    mensaje: "Hola Mundo Luis Javier Hdez 23",
     fecha: new Date().toISOString(),
   });
 });
