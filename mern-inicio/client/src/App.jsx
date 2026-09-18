@@ -1,66 +1,90 @@
-/*import "./App.css";
-
-function App(){
-  const materia = "Diseño y Desarrollo de Apps Web";
-  const parcial = 3;
-  return (
-    <main>
-      <h1>Gestor de tareas </h1>
-      <p>Aplicacion en React</p>
-      <p>Materia: {materia}</p>
-      <p>Parcial: {parcial}</p>
-      <p>4x5 = {4 * 5}</p>
-
-    </main>
-  );
-}
-
-export default App;*/
-
+import { useState } from "react";
 import "./App.css";
+import Encabezado from "./components/Encabezado.jsx";
+import ListaTareas from "./components/ListaTareas.jsx";
+import FormularioTarea from "./components/FormularioTarea.jsx";
 
 function App() {
-  // Datos de la venta del auto
-  const marca = "Toyota";
-  const modelo = "Corolla 2026";
-  const precio = 385000;
-  const enganche = 100000;
-  const mensualidades = 24;
+  // Estado de las tareas
+  const [tareas, setTareas] = useState([
+    {
+      id: 1,
+      nombre: "inicio de actividad de react",
+      completada: false,
+    },
+    {
+      id: 2,
+      nombre: "reporte de react",
+      completada: false,
+    },
+    {
+      id: 3,
+      nombre: "prueba final de react",
+      completada: false,
+    },
+  ]);
 
-  // Cálculos
-  const saldo = precio - enganche;
-  const pagoMensual = saldo / mensualidades;
-  const precioConEnganche = enganche + saldo;
+  // Agregar una tarea
+  const agregarTarea = (nombre) => {
+    const nuevaTarea = {
+      id: Date.now(),
+      nombre: nombre,
+      completada: false,
+    };
+
+    setTareas([...tareas, nuevaTarea]);
+  };
+
+  // Cambiar el estado de una tarea
+  const cambiarEstadoTarea = (id) => {
+    const tareasActualizadas = tareas.map((tarea) => {
+      if (tarea.id === id) {
+        return {
+          ...tarea,
+          completada: !tarea.completada,
+        };
+      }
+
+      return tarea;
+    });
+
+    setTareas(tareasActualizadas);
+  };
+
+  // Eliminar una tarea
+  const eliminarTarea = (id) => {
+    const tareasActualizadas = tareas.filter(
+      (tarea) => tarea.id !== id
+    );
+
+    setTareas(tareasActualizadas);
+  };
+
+  // Contar las tareas pendientes
+  const tareasPendientes = tareas.filter(
+    (tarea) => !tarea.completada
+  ).length;
 
   return (
     <main>
-      <h1>Diseño y Desarrollo de Apps Web</h1>
+      <Encabezado
+        titulo="Gestor de Tareas de septiembre CUH"
+        subtitulo="Aplicacion desarrollada en CUH con React en septiembre"
+      />
 
-      <h2>Luis Javier Hernández Bautista</h2>
+      <section className="gestor">
+        <p className="contador">
+          Tareas pendientes: <strong>{tareasPendientes}</strong>
+        </p>
 
-      <h2>Venta de Autos</h2>
+        <FormularioTarea agregarTarea={agregarTarea} />
 
-      <p>Marca: {marca}</p>
-      <p>Modelo: {modelo}</p>
-      <p>Precio: ${precio}</p>
-      <p>Enganche: ${enganche}</p>
-      <p>Mensualidades: {mensualidades}</p>
-
-      <h2>Plan de pago</h2>
-
-      <p>
-        Saldo restante: ${precio} - ${enganche} = ${saldo}
-      </p>
-
-      <p>
-        Pago mensual: ${saldo} ÷ {mensualidades} = $
-        {pagoMensual.toFixed(2)}
-      </p>
-
-      <p>
-        Precio total: ${enganche} + ${saldo} = $
-        {precioConEnganche}
-      </p>
+        <ListaTareas
+          tareas={tareas}
+          cambiarEstadoTarea={cambiarEstadoTarea}
+          eliminarTarea={eliminarTarea}
+        />
+      </section>
     </main>
   );
 }
